@@ -65,6 +65,14 @@ public class MockClassRule implements TestRule, MethodRule
     }
 
     // methods
+
+    /**
+     * Starts WireMockServer before the tests starts
+     * Stops WireMockServer after all the tests are run
+     * @param statement
+     * @param description
+     * @return
+     */
     @Override
     public Statement apply(Statement statement, Description description)
     {

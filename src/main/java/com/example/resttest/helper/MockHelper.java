@@ -30,6 +30,12 @@ public class MockHelper
     private static WireMockServer wireMockServer;
 
     // methods
+
+    /**
+     * Starts WireMockServer
+     * @throws IOException
+     * @throws InterruptedException
+     */
     public static void mockServerStart() throws IOException, InterruptedException
     {
         log.info(" [x] Root dir : " + wireMockRootDir);
@@ -46,6 +52,9 @@ public class MockHelper
         startRecording();
     }
 
+    /**
+     * Stops WireMockServer
+     */
     public static void mockServerStop()
     {
         if (wireMockRecord)
@@ -57,6 +66,10 @@ public class MockHelper
 
 
     // Helper Methods
+
+    /**
+     * Start the stubbing process
+     */
     private static void startRecording()
     {
         if (wireMockRecord)
@@ -70,6 +83,9 @@ public class MockHelper
         }
     }
 
+    /**
+     * Creates required directories if necessary
+     */
     private static void createDirectories()
     {
         log.info(" [x] Creating the directories");
@@ -79,6 +95,21 @@ public class MockHelper
 
 
     // set different options
+
+    /**
+     * Switch to turn recording ON/OFF
+     */
+    private static void setRecord()
+    {
+        if(new File(wireMockRootDir + "mappings").exists())
+            wireMockRecord = false;
+    }
+
+    /**
+     * Sets relevant options required by the WireMockServer
+     * @param proxyPort
+     * @throws IOException
+     */
     public static void setOptions(int proxyPort) throws IOException
     {
         setRecord();
@@ -105,12 +136,6 @@ public class MockHelper
         MockHelper.proxyHost = proxyHost;
         MockHelper.proxyPort = proxyPort;
         wireMockPort = port;
-    }
-
-    private static void setRecord()
-    {
-        if(new File(wireMockRootDir + "mappings").exists())
-            wireMockRecord = false;
     }
 }
 
