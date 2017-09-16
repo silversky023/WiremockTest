@@ -1,8 +1,7 @@
 package com.example.resttest;
 
-import com.example.resttest.helper.MockHelper;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import com.example.resttest.helper.MockClassRule;
+import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -13,11 +12,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
-
 import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringRunner.class)
@@ -27,28 +21,13 @@ public class RestTestApplicationTests
 	//Logger
 	private Logger log = LoggerFactory.getLogger(RestTestApplication.class);
 
-	@BeforeClass
-	public static void setUp() throws IOException, InterruptedException
-	{
-		Properties properties = new Properties();
-		InputStream inputStream = new FileInputStream("application.properties");
-		properties.load(inputStream);
-		MockHelper.mockServerStart(Boolean.valueOf(properties.getProperty("wiremock.record", "false")));
-	}
-
-	@AfterClass
-	public static void shutdown() throws IOException
-	{
-		Properties properties = new Properties();
-		InputStream inputStream = new FileInputStream("application.properties");
-		properties.load(inputStream);
-		MockHelper.mockServerStop(Boolean.valueOf(properties.getProperty("wiremock.record", "false")));
-	}
+	@ClassRule
+	public static MockClassRule mockClassRule = new MockClassRule(8082);
 
 	@Test
 	public void A_test() throws InterruptedException
 	{
-		String url = "http://localhost:9999/start";
+		String url = "http://localhost:9082/start";
 		ResponseEntity responseEntity = new RestTemplate().getForEntity(url, String.class);
 		String result = responseEntity.getBody().toString();
 		log.info(" [x] RESULT : " + result);
@@ -58,7 +37,7 @@ public class RestTestApplicationTests
 	@Test
 	public void B_Test()
 	{
-		String url = "http://localhost:9999/welcome/Charles";
+		String url = "http://localhost:9082/welcome/Charles";
 		ResponseEntity responseEntity = new RestTemplate().getForEntity(url, String.class);
 
 		log.info(" [x] Body : " + responseEntity.getBody().toString());
@@ -71,7 +50,7 @@ public class RestTestApplicationTests
 	@Test(expected = HttpServerErrorException.class)
 	public void C_Test()
 	{
-		String url = "http://localhost:9999/welcome/Finney";
+		String url = "http://localhost:9082/welcome/Finney";
 		ResponseEntity responseEntity = new RestTemplate().getForEntity(url, String.class);
 
 		log.info(" [x] Body : " + responseEntity.getBody().toString());
