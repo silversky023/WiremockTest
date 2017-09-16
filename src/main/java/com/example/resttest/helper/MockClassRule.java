@@ -12,19 +12,15 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class MockClassRule implements TestRule, MethodRule
 {
-    // auto-wiring components
-    @Autowired
-    private MockHelper mockHelper;
-
     // variables declaration
     private static int proxyPort;
 
     // constructor
-    public MockClassRule (int port)
+    public MockClassRule (int proxyPort)
     {
         try
         {
-            mockHelper.setOptions(port);
+            MockHelper.setOptions(proxyPort);
         }
         catch(Exception e)
         {
@@ -32,6 +28,43 @@ public class MockClassRule implements TestRule, MethodRule
         }
     }
 
+    public MockClassRule (int mockPort, int proxyPort)
+    {
+        try
+        {
+            MockHelper.setOptions(mockPort, proxyPort);
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public MockClassRule (int mockPort, String proxyHost, int proxyPort)
+    {
+        try
+        {
+            MockHelper.setOptions(mockPort, proxyHost, proxyPort);
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public MockClassRule (int mockPort, String proxyHost)
+    {
+        try
+        {
+            MockHelper.setOptions(mockPort, proxyHost);
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    // methods
     @Override
     public Statement apply(Statement statement, Description description)
     {
@@ -40,11 +73,11 @@ public class MockClassRule implements TestRule, MethodRule
             @Override
             public void evaluate() throws Throwable
             {
-                mockHelper.mockServerStart();
+                MockHelper.mockServerStart();
 
                 statement.evaluate();
 
-                mockHelper.mockServerStop();
+                MockHelper.mockServerStop();
             }
         };
     }

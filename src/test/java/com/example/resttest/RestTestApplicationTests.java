@@ -22,7 +22,7 @@ public class RestTestApplicationTests
 	private Logger log = LoggerFactory.getLogger(RestTestApplication.class);
 
 	@ClassRule
-	public static MockClassRule mockClassRule = new MockClassRule(8082);
+	public static MockClassRule mockClassRule = new MockClassRule(9082, 8082);
 
 	@Test
 	public void A_test() throws InterruptedException
